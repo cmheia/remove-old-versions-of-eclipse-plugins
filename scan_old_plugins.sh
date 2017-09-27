@@ -5,7 +5,7 @@
 # generates a "clean_old_plugins.sh" script to clean old versions.
 # warning: DANGEROUS! review clean_old_plugins.sh script before running it.
 
-LogDir=$(date +%Y%m%d%H%M%S)
+LogDir="scan_result-"$(date +%Y%m%d%H%M%S)
 LogFileName="${LogDir}.log"
 
 TargetDirs=(dropins features plugins)
@@ -123,6 +123,8 @@ cat > ${ByBundlesInfoFilePrefix}${CleanPluginScriptFile} <<End-of-message
 # generates a "${ByBundlesInfoFilePrefix}${CleanPluginScriptFile}" script to clean old versions.
 # warning: DANGEROUS! review ${ByBundlesInfoFilePrefix}${CleanPluginScriptFile} script before running it.
 
+cd ..
+
 End-of-message
 
 	(
@@ -168,4 +170,11 @@ End-of-message
 		fi
 	done
 	) > ${ByBundlesInfoFilePrefix}${LogFileName}
+
+cat >> ${CleanPluginScriptFile} <<End-of-message
+
+cd ${LogDir}
+
+End-of-message
+
 fi
