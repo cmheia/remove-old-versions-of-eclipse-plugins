@@ -9,7 +9,7 @@ LogDir="scan_result-"$(date +%Y%m%d%H%M%S)
 LogFileName="${LogDir}.log"
 
 TargetDirs=(dropins features plugins)
-BackupDir=Backups-${LogDir}
+BackupDir=backups
 
 BundlesInfoTargetDirs=(plugins)
 BundlesInfo="../configuration/org.eclipse.equinox.simpleconfigurator/bundles.info"
@@ -89,7 +89,7 @@ do
 			echo "${v}=${p}" >> ${dir}-${CanonicalPluginsFile}
 		else
 			echo "[stale]${p} > ${v}"
-			echo "mv ${dir}/${p} ${BackupDir}/${dir}/" >> ${dir}-${CleanPluginScriptFile}
+			echo "mv ../${dir}/${p} ${BackupDir}/${dir}/" >> ${dir}-${CleanPluginScriptFile}
 		fi
 	done
 
@@ -98,7 +98,7 @@ do
 
 cat >> ${CleanPluginScriptFile} <<End-of-message
 if [ ! -d "${BackupDir}/${dir}" ] ; then
-	echo "creat dir ${BackupDir}/${dir}"
+	echo "create dir ${BackupDir}/${dir}"
 	mkdir -p "${BackupDir}/${dir}"
 fi
 
@@ -123,8 +123,6 @@ cat > ${ByBundlesInfoFilePrefix}${CleanPluginScriptFile} <<End-of-message
 # generates a "${ByBundlesInfoFilePrefix}${CleanPluginScriptFile}" script to clean old versions.
 # warning: DANGEROUS! review ${ByBundlesInfoFilePrefix}${CleanPluginScriptFile} script before running it.
 
-cd ..
-
 End-of-message
 
 	(
@@ -145,7 +143,7 @@ End-of-message
 			g=$(grep -l "${p}" ${BundlesInfo} | head -1 | awk '{print $1}')
 			if [ "Not${g}Registered" = "NotRegistered" ]; then
 				echo "[stale]${p}"
-				echo "mv ${dir}/${p} ${ByBundlesInfoFilePrefix}${BackupDir}/${dir}/" >> ${ByBundlesInfoFilePrefix}${dir}-${CleanPluginScriptFile}
+				echo "mv ../${dir}/${p} ${ByBundlesInfoFilePrefix}${BackupDir}/${dir}/" >> ${ByBundlesInfoFilePrefix}${dir}-${CleanPluginScriptFile}
 			else
 				echo "[fresh]${p}"
 				echo "${p}" >> ${ByBundlesInfoFilePrefix}${dir}-${RegisteredPluginsFile}
@@ -156,7 +154,7 @@ End-of-message
 
 cat >> ${ByBundlesInfoFilePrefix}${CleanPluginScriptFile} <<End-of-message
 if [ ! -d "${ByBundlesInfoFilePrefix}${BackupDir}/${dir}" ] ; then
-	echo "creat dir ${ByBundlesInfoFilePrefix}${BackupDir}/${dir}"
+	echo "create dir ${ByBundlesInfoFilePrefix}${BackupDir}/${dir}"
 	mkdir -p "${ByBundlesInfoFilePrefix}${BackupDir}/${dir}"
 fi
 
